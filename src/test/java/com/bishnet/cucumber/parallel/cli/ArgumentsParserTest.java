@@ -294,4 +294,34 @@ public class ArgumentsParserTest {
 		assertThat(runtimeConfiguration.threadTimelineReportPath.toString()).isEqualTo(REPORT_THREADREPORT);
 	}
 
+	@Test
+	public void featureDistributionArgumentShouldBeRemovedFromResultingCucumberArgsListAndDynamicDistributionOptionShouldBeTrue() {
+		List<String> arguments = new ArrayList<>();
+		arguments.add("--feature-distribution-method");
+		arguments.add("dynamic");
+		ArgumentsParser argumentsParser = new ArgumentsParser(arguments);
+		RuntimeConfiguration runtimeConfiguration = argumentsParser.parse();
+		assertThat(runtimeConfiguration.dynamicFeatureDistribution).isTrue();
+		assertThat(runtimeConfiguration.cucumberPassthroughArguments.size()).isEqualTo(0);
+	}
+
+    @Test
+    public void featureDistributionArgumentShouldBeRemovedFromCucumberArgsListAndDynamicDistributionOptionShouldBeFalseIfWrongArgumentPassed() {
+        List<String> arguments = new ArrayList<>();
+        arguments.add("--feature-distribution-method");
+        arguments.add("wrongArg");
+        ArgumentsParser argumentsParser = new ArgumentsParser(arguments);
+        RuntimeConfiguration runtimeConfiguration = argumentsParser.parse();
+        assertThat(runtimeConfiguration.dynamicFeatureDistribution).isFalse();
+        assertThat(runtimeConfiguration.cucumberPassthroughArguments.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void featureDistributionOptionShouldBeFalseIfNotSpecified() {
+        List<String> arguments = new ArrayList<>();
+        ArgumentsParser argumentsParser = new ArgumentsParser(arguments);
+        RuntimeConfiguration runtimeConfiguration = argumentsParser.parse();
+        assertThat(runtimeConfiguration.dynamicFeatureDistribution).isFalse();
+    }
+
 }

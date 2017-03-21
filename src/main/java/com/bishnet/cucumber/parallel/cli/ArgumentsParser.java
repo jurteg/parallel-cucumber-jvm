@@ -28,12 +28,18 @@ public class ArgumentsParser {
 		Path htmlReportPath = null;
 		boolean threadTimelineReportRequired = false;
 		Path threadTimelineReportPath = null;
+        boolean dynamicFeatureDistribution = false;
 
 		while (!parseArguments.isEmpty()) {
 			String arg = parseArguments.remove(0).trim();
 
 			if (arg.equals("--num-threads")) {
 				numberOfThreads = Integer.parseInt(parseArguments.remove(0));
+			} else if (arg.equals("--feature-distribution-method")) {
+				String distribution = parseArguments.remove(0);
+				if ("dynamic".equals(distribution)) {
+					dynamicFeatureDistribution = true;
+				}
 			} else if (arg.equals("--plugin") || arg.equals("-p") || arg.equals("--format") || arg.equals("-f")) {
 				String pluginValue = parseArguments.remove(0);
 				String[] pluginArgsArray = pluginValue.split(":", 2);
@@ -78,7 +84,7 @@ public class ArgumentsParser {
 		RuntimeConfiguration runtimeConfiguration = new RuntimeConfiguration(numberOfThreads,
 				Collections.unmodifiableList(cucumberArgs), Collections.unmodifiableList(fullFeatureParsingArguments),
 				Collections.unmodifiableList(featurePaths), htmlReportPath, htmlReportRequired, jsonReportPath,
-				jsonReportRequired, threadTimelineReportPath, threadTimelineReportRequired);
+				jsonReportRequired, threadTimelineReportPath, threadTimelineReportRequired, dynamicFeatureDistribution);
 		return runtimeConfiguration;
 	}
 }
